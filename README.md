@@ -1,3 +1,9 @@
+# exchange-app
+
+[![Build Status](https://travis-ci.com/EmaSuriano/exchange-app.svg?branch=master)](https://travis-ci.com/EmaSuriano/exchange-app)
+
+> Exchange Application based on [Open Exchange Rate](https://openexchangerates.org/)
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
