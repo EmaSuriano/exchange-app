@@ -11,6 +11,12 @@ type Pocket = {
 };
 
 type ExchangeRate = {
-  currency: Currency;
-  value: number;
+  exchange: Record<Currency, number>;
+  lastUpdate: Date | null;
+};
+
+type ExchangeResponse = {
+  rates: Record<Currency, number>;
+  base: Currency;
+  date: Date;
 };

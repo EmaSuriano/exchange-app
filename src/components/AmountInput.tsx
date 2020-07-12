@@ -8,15 +8,18 @@ type Props = {
 
 const AmountInput = ({ onChange = noop, amount }: Props) => {
   return (
-    <input
-      type="number"
-      value={amount}
-      onChange={(evt) => {
-        const { value } = evt.currentTarget;
-        const amount = parseFloat(value) || 0;
-        onChange(amount);
-      }}
-    />
+    <span>
+      <input
+        type="number"
+        value={amount}
+        onChange={(evt) => {
+          const { value } = evt.currentTarget;
+          const amount = parseFloat(value) || 0;
+          onChange(amount);
+        }}
+      />
+      <button onClick={() => onChange(0)}>Clear</button>
+    </span>
   );
 };
 

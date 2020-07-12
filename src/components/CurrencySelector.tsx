@@ -1,7 +1,7 @@
 import React from 'react';
 import { noop } from '../utils/functions';
 import { useRecoilValue } from 'recoil';
-import { pocketListState, pocketState } from '../recoilState';
+import { pocketListState, pocketState } from '../recoil/pocket';
 
 type Props = {
   onChange?: (curr: Currency) => void;
