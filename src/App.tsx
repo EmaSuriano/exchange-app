@@ -1,42 +1,15 @@
 import React, { useEffect } from 'react';
-import { useRecoilState, useSetRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import {
   currencyOriginState,
   currencyDestinationState,
   exchangeState,
-  pocketState,
   amountOriginState,
   amountDestinationState,
 } from './recoilState';
 import CurrencySelector from './components/CurrencySelector';
 import ExchangeButton from './components/ExchangeButton';
-
-const EXCHANGE_RATES: ExchangeRate[] = [
-  {
-    currency: 'USD',
-    value: 0.8,
-  },
-  {
-    currency: 'EUR',
-    value: 1,
-  },
-  {
-    currency: 'GBP',
-    value: 0.8,
-  },
-];
-
-function useFakeData() {
-  const setEur = useSetRecoilState(pocketState('EUR'));
-  const setUsd = useSetRecoilState(pocketState('USD'));
-  const setGbp = useSetRecoilState(pocketState('GBP'));
-
-  useEffect(() => {
-    setEur(100);
-    setUsd(50);
-    setGbp(0);
-  }, []);
-}
+import AmountInput from './components/AmountInput';
 
 function useRefreshExchangeRate(currency: Currency) {
   const setEur = useSetRecoilState(exchangeState('EUR'));
@@ -106,8 +79,13 @@ const App = () => {
     amountDestinationState,
   );
 
+  // const setFakePockets = useFakePockets();
+
+  // useEffect(() => {
+  //   setFakePockets();
+  // }, []);
+
   useRefreshExchangeRate(currencyOrigin);
-  useFakeData();
 
   return (
     <div>
@@ -118,15 +96,7 @@ const App = () => {
           onChange={setCurrencyOrigin}
         />
 
-        <input
-          type="number"
-          value={amountOrigin}
-          onChange={(evt) => {
-            const { value } = evt.currentTarget;
-            const amount = parseFloat(value) || 0;
-            setAmountOrigin(amount);
-          }}
-        />
+        <AmountInput amount={amountOrigin} onChange={setAmountOrigin} />
       </div>
 
       <div>
@@ -135,13 +105,9 @@ const App = () => {
           onChange={setCurrencyDestination}
         />
 
-        <input
-          type="number"
-          value={amountDestination}
-          onChange={(evt) => {
-            const { value } = evt.currentTarget;
-            setAmountDestination(parseFloat(value) || 0);
-          }}
+        <AmountInput
+          amount={amountDestination}
+          onChange={setAmountDestination}
         />
       </div>
 

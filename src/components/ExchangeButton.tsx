@@ -1,5 +1,5 @@
 import React from 'react';
-import { useRecoilValue, useRecoilState, useResetRecoilState } from 'recoil';
+import { useRecoilValue, useRecoilState } from 'recoil';
 import {
   exchangeEnabledState,
   currencyOriginState,

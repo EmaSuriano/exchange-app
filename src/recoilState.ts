@@ -1,9 +1,9 @@
 import {
   atom,
   selector,
-  selectorFamily,
   atomFamily,
   DefaultValue,
+  MutableSnapshot,
 } from 'recoil';
 
 // Constants
@@ -131,3 +131,10 @@ export const amountDestinationState = amountStateCreator(
   false,
   'amountDestinationState',
 );
+
+// initializers
+export const setFakeData = ({ set }: MutableSnapshot) => {
+  set(pocketState('EUR'), 100);
+  set(pocketState('USD'), 50);
+  set(pocketState('GBP'), 0);
+};
