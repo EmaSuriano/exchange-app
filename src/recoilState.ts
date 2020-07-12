@@ -3,24 +3,12 @@ import {
   selector,
   selectorFamily,
   atomFamily,
-  useRecoilState,
+  DefaultValue,
 } from 'recoil';
 
-// Default values
-const DEFAULT_POCKETS: Pocket[] = [
-  {
-    currency: 'USD',
-    amount: 100,
-  },
-  {
-    currency: 'EUR',
-    amount: 50,
-  },
-  {
-    currency: 'GBP',
-    amount: 0,
-  },
-];
+// Constants
+const ORIGIN = 0;
+const DESTINATION = 1;
 
 const ALL_CURRENCIES: CurrencyDetails[] = [
   {
@@ -38,50 +26,108 @@ const ALL_CURRENCIES: CurrencyDetails[] = [
 ];
 
 // atoms
-export const pocketListState = atom({
-  key: 'pocketListState',
-  default: DEFAULT_POCKETS,
-});
-
-export const amountState = atom({
-  key: 'amountState',
+export const pocketState = atomFamily<number, Currency>({
+  key: 'pocketState',
   default: 0,
 });
 
-export const currencyOriginState = atom<Currency>({
-  key: 'currencyOriginState',
-  default: 'USD',
+const amountState = atom<number[]>({
+  key: 'amountState',
+  default: [0, 0],
 });
 
-export const currencyDestinationState = atom<Currency>({
-  key: 'currencyDestinationState',
-  default: 'EUR',
+const currencyState = atom<Currency[]>({
+  key: 'currencyState',
+  default: ['USD', 'EUR'],
+});
+
+export const exchangeState = atomFamily<ExchangeRate[], Currency>({
+  key: 'exchangeState',
+  default: [],
 });
 
 // selectors
-export const currencyAmountState = selectorFamily({
-  key: 'currencyAmountState',
-  get: (currency: Currency) => ({ get }) => {
-    const pocketList = get(pocketListState);
+const currencyStateCreator = (origin: boolean, key: string) => {
+  const index = origin ? ORIGIN : DESTINATION;
+  return selector<Currency>({
+    key,
+    get: ({ get }) => get(currencyState)[index],
+    set: ({ set, get }, newValue) => {
+      if (newValue instanceof DefaultValue) return set(currencyState, newValue);
 
-    return pocketList.find((pocket) => pocket.currency === currency)?.amount;
-  },
-});
+      const currency = Array.from(get(currencyState));
 
-export const currencyListWithAmountState = selector({
-  key: 'currencyListState',
+      const shouldSwapCurrencies = currency.includes(newValue);
+      if (shouldSwapCurrencies) {
+        set(currencyState, Array.from(get(currencyState)).reverse());
+        return set(amountState, Array.from(get(amountState)).reverse());
+      }
+
+      currency[index] = newValue;
+      set(currencyState, currency);
+    },
+  });
+};
+
+export const currencyOriginState = currencyStateCreator(
+  true,
+  'currencyOriginState',
+);
+
+export const currencyDestinationState = currencyStateCreator(
+  false,
+  'currencyDestinationState',
+);
+
+export const pocketListState = selector({
+  key: 'pocketListState',
   get: ({ get }) => {
-    const pocketList = get(pocketListState);
-
     return ALL_CURRENCIES.map((curr) => {
-      const pocket = pocketList.find(
-        ({ currency }) => currency === curr.currency,
-      );
+      const amount = get(pocketState(curr.currency));
 
       return {
         ...curr,
-        amount: pocket?.amount || 0,
+        amount: amount || 0,
       };
     });
   },
 });
+
+export const exchangeEnabledState = selector({
+  key: 'exchangeEnabledState',
+  get: ({ get }) => {
+    const amountOrigin = get(amountState)[0];
+    const currencyOrigin = get(currencyOriginState);
+    const pocketOrigin = get(pocketState(currencyOrigin)) || 0;
+    return amountOrigin > 0 && pocketOrigin > amountOrigin;
+  },
+});
+
+const amountStateCreator = (origin: boolean, key: string) => {
+  const index = origin ? ORIGIN : DESTINATION;
+  return selector<number>({
+    key,
+    get: ({ get }) => get(amountState)[index],
+    set: ({ set, get }, newValue) => {
+      if (newValue instanceof DefaultValue) return set(amountState, newValue);
+
+      const currencies = Array.from(get(currencyState));
+      const currenciesSort = origin ? currencies : currencies.reverse();
+
+      const exchangeRate =
+        get(exchangeState(currenciesSort[0])).find(
+          ({ currency }) => currency === currenciesSort[1],
+        )?.value || 1;
+      const amounts = [newValue, newValue * exchangeRate];
+
+      set(amountState, origin ? amounts : amounts.reverse());
+    },
+  });
+};
+
+export const amountOriginState = amountStateCreator(true, 'amountOriginState');
+
+export const amountDestinationState = amountStateCreator(
+  false,
+  'amountDestinationState',
+);

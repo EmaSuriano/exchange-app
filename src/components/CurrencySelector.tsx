@@ -1,10 +1,7 @@
 import React from 'react';
 import { noop } from '../utils/functions';
 import { useRecoilValue } from 'recoil';
-import {
-  currencyListWithAmountState,
-  currencyAmountState,
-} from '../recoilState';
+import { pocketListState, pocketState } from '../recoilState';
 
 type Props = {
   onChange?: (curr: Currency) => void;
@@ -12,8 +9,8 @@ type Props = {
 };
 
 const CurrencySelector = ({ onChange = noop, currency }: Props) => {
-  const currencyList = useRecoilValue(currencyListWithAmountState);
-  const amountOrigin = useRecoilValue(currencyAmountState(currency));
+  const pocketList = useRecoilValue(pocketListState);
+  const pocketAmount = useRecoilValue(pocketState(currency));
 
   return (
     <div>
@@ -21,13 +18,13 @@ const CurrencySelector = ({ onChange = noop, currency }: Props) => {
         value={currency}
         onChange={(evt) => onChange(evt.currentTarget.value as Currency)}
       >
-        {currencyList.map((curr) => (
-          <option value={curr.currency}>
+        {pocketList.map((curr) => (
+          <option value={curr.currency} key={curr.currency}>
             {curr.name} - {curr.amount}
           </option>
         ))}
       </select>
-      {amountOrigin}
+      {pocketAmount}
     </div>
   );
 };

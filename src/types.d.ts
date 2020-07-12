@@ -9,3 +9,8 @@ type Pocket = {
   currency: Currency;
   amount: number;
 };
+
+type ExchangeRate = {
+  currency: Currency;
+  value: number;
+};
