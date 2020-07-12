@@ -1,39 +1,10 @@
 import React from 'react';
-import { useRecoilValue, useRecoilState } from 'recoil';
-import {
-  exchangeEnabledState,
-  currencyOriginState,
-  currencyDestinationState,
-  pocketState,
-  amountOriginState,
-  amountDestinationState,
-} from '../recoilState';
+import { useRecoilValue, useRecoilCallback } from 'recoil';
+import { exchangeEnabledState, exchangeAmountCallback } from '../recoilState';
 
-type Props = {};
-
-const useExchangeCurrency = () => {
-  const [pocketOrigin, setPocketOrigin] = useRecoilState(
-    pocketState(useRecoilValue(currencyOriginState)),
-  );
-  const [pocketDestination, setPocketDestination] = useRecoilState(
-    pocketState(useRecoilValue(currencyDestinationState)),
-  );
-  const [amountOrigin, setAmountOrigin] = useRecoilState(amountOriginState);
-  const [amountDestination, setAmountDestination] = useRecoilState(
-    amountDestinationState,
-  );
-  return () => {
-    setPocketOrigin(pocketOrigin - amountOrigin);
-    setPocketDestination(pocketDestination + amountDestination);
-
-    setAmountOrigin(0);
-    setAmountDestination(0);
-  };
-};
-
-const ExchangeButton = (props: Props) => {
+const ExchangeButton = () => {
   const enabled = useRecoilValue(exchangeEnabledState);
-  const exchangeCurrency = useExchangeCurrency();
+  const exchangeCurrency = useRecoilCallback(exchangeAmountCallback);
 
   return (
     <button onClick={exchangeCurrency} disabled={!enabled}>

@@ -4,6 +4,7 @@ import {
   atomFamily,
   DefaultValue,
   MutableSnapshot,
+  CallbackInterface,
 } from 'recoil';
 
 // Constants
@@ -41,14 +42,15 @@ const currencyState = atom<Currency[]>({
   default: ['USD', 'EUR'],
 });
 
-export const exchangeState = atomFamily<ExchangeRate[], Currency>({
+const exchangeState = atomFamily<ExchangeRate[], Currency>({
   key: 'exchangeState',
   default: [],
 });
 
 // selectors
-const currencyStateCreator = (origin: boolean, key: string) => {
+const currencyStateCreator = (origin: boolean) => {
   const index = origin ? ORIGIN : DESTINATION;
+  const key = origin ? 'currencyOriginState' : 'currencyDestinationState';
   return selector<Currency>({
     key,
     get: ({ get }) => get(currencyState)[index],
@@ -57,8 +59,8 @@ const currencyStateCreator = (origin: boolean, key: string) => {
 
       const currency = Array.from(get(currencyState));
 
-      const shouldSwapCurrencies = currency.includes(newValue);
-      if (shouldSwapCurrencies) {
+      const shouldSwapPockets = currency.includes(newValue);
+      if (shouldSwapPockets) {
         set(currencyState, Array.from(get(currencyState)).reverse());
         return set(amountState, Array.from(get(amountState)).reverse());
       }
@@ -69,15 +71,8 @@ const currencyStateCreator = (origin: boolean, key: string) => {
   });
 };
 
-export const currencyOriginState = currencyStateCreator(
-  true,
-  'currencyOriginState',
-);
-
-export const currencyDestinationState = currencyStateCreator(
-  false,
-  'currencyDestinationState',
-);
+export const currencyOriginState = currencyStateCreator(true);
+export const currencyDestinationState = currencyStateCreator(false);
 
 export const pocketListState = selector({
   key: 'pocketListState',
@@ -97,44 +92,95 @@ export const exchangeEnabledState = selector({
   key: 'exchangeEnabledState',
   get: ({ get }) => {
     const amountOrigin = get(amountState)[0];
-    const currencyOrigin = get(currencyOriginState);
-    const pocketOrigin = get(pocketState(currencyOrigin)) || 0;
+    const pocketOrigin = get(pocketOriginState) || 0;
+
     return amountOrigin > 0 && pocketOrigin > amountOrigin;
   },
 });
 
-const amountStateCreator = (origin: boolean, key: string) => {
+export const exchangeRateState = selector({
+  key: 'exchangeRateState',
+  get: ({ get }) => {
+    const currencyOrigin = get(currencyOriginState);
+    const currencyDestination = get(currencyDestinationState);
+
+    const exchangeRate =
+      get(exchangeState(currencyOrigin)).find(
+        ({ currency }) => currency === currencyDestination,
+      )?.value || 1;
+
+    return exchangeRate;
+  },
+});
+
+const amountStateCreator = (origin: boolean) => {
   const index = origin ? ORIGIN : DESTINATION;
+  const key = origin ? 'amountOriginState' : 'amountDestinationState';
   return selector<number>({
     key,
     get: ({ get }) => get(amountState)[index],
     set: ({ set, get }, newValue) => {
       if (newValue instanceof DefaultValue) return set(amountState, newValue);
 
-      const currencies = Array.from(get(currencyState));
-      const currenciesSort = origin ? currencies : currencies.reverse();
+      const exchangeRate = get(exchangeRateState);
+      const amount = origin
+        ? [newValue, newValue * exchangeRate]
+        : [newValue / exchangeRate, newValue];
 
-      const exchangeRate =
-        get(exchangeState(currenciesSort[0])).find(
-          ({ currency }) => currency === currenciesSort[1],
-        )?.value || 1;
-      const amounts = [newValue, newValue * exchangeRate];
-
-      set(amountState, origin ? amounts : amounts.reverse());
+      set(amountState, amount);
     },
   });
 };
 
-export const amountOriginState = amountStateCreator(true, 'amountOriginState');
+export const amountOriginState = amountStateCreator(true);
+export const amountDestinationState = amountStateCreator(false);
 
-export const amountDestinationState = amountStateCreator(
-  false,
-  'amountDestinationState',
-);
+const pocketStateCreator = (origin: boolean) => {
+  const recoilValue = origin ? currencyOriginState : currencyDestinationState;
+  const key = origin ? 'pocketOriginState' : 'pocketDestinationState';
+  return selector<number>({
+    key,
+    get: ({ get }) => get(pocketState(get(recoilValue))),
+    set: ({ set, get }, newValue) =>
+      set(pocketState(get(recoilValue)), newValue),
+  });
+};
+
+export const pocketOriginState = pocketStateCreator(true);
+export const pocketDestinationState = pocketStateCreator(false);
 
 // initializers
 export const setFakeData = ({ set }: MutableSnapshot) => {
   set(pocketState('EUR'), 100);
   set(pocketState('USD'), 50);
   set(pocketState('GBP'), 0);
+};
+
+// callbacks
+export const exchangeAmountCallback = ({
+  set,
+  snapshot,
+}: CallbackInterface) => async () => {
+  const pocketOrigin = await snapshot.getPromise(pocketOriginState);
+  const pocketDestination = await snapshot.getPromise(pocketDestinationState);
+
+  const amountOrigin = await snapshot.getPromise(amountOriginState);
+  const amountDestination = await snapshot.getPromise(amountDestinationState);
+
+  set(pocketOriginState, pocketOrigin - amountOrigin);
+  set(pocketDestinationState, pocketDestination + amountDestination);
+
+  set(amountOriginState, 0);
+  set(amountDestinationState, 0);
+};
+
+export const swapPocketsCallback = ({
+  set,
+  snapshot,
+}: CallbackInterface) => async () => {
+  const currencies = await snapshot.getPromise(currencyState);
+  const amounts = await snapshot.getPromise(amountState);
+
+  set(currencyState, Array.from(currencies).reverse());
+  set(amountState, Array.from(amounts).reverse());
 };

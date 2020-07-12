@@ -18,11 +18,14 @@ const CurrencySelector = ({ onChange = noop, currency }: Props) => {
         value={currency}
         onChange={(evt) => onChange(evt.currentTarget.value as Currency)}
       >
-        {pocketList.map((curr) => (
-          <option value={curr.currency} key={curr.currency}>
-            {curr.name} - {curr.amount}
-          </option>
-        ))}
+        {pocketList.map((curr) => {
+          const showAmount = currency !== curr.currency;
+          return (
+            <option value={curr.currency} key={curr.currency}>
+              {curr.name} {showAmount && `- ${curr.amount}`}
+            </option>
+          );
+        })}
       </select>
       {pocketAmount}
     </div>

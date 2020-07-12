@@ -1,69 +1,16 @@
-import React, { useEffect } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import React from 'react';
+import { useRecoilState } from 'recoil';
 import {
   currencyOriginState,
   currencyDestinationState,
-  exchangeState,
   amountOriginState,
   amountDestinationState,
 } from './recoilState';
 import CurrencySelector from './components/CurrencySelector';
 import ExchangeButton from './components/ExchangeButton';
 import AmountInput from './components/AmountInput';
-
-function useRefreshExchangeRate(currency: Currency) {
-  const setEur = useSetRecoilState(exchangeState('EUR'));
-  const setUsd = useSetRecoilState(exchangeState('USD'));
-  const setGbp = useSetRecoilState(exchangeState('GBP'));
-  useEffect(() => {
-    setEur([
-      {
-        currency: 'USD',
-        value: 1.2,
-      },
-      {
-        currency: 'EUR',
-        value: 1,
-      },
-      {
-        currency: 'GBP',
-        value: 0.8,
-      },
-    ]);
-
-    setUsd([
-      {
-        currency: 'USD',
-        value: 1,
-      },
-      {
-        currency: 'EUR',
-        value: 0.8,
-      },
-      {
-        currency: 'GBP',
-        value: 0.8,
-      },
-    ]);
-
-    setGbp([
-      {
-        currency: 'USD',
-        value: 1.1,
-      },
-      {
-        currency: 'EUR',
-        value: 1.2,
-      },
-      {
-        currency: 'GBP',
-        value: 1,
-      },
-    ]);
-  }, []);
-
-  // implement API polling
-}
+import ExchangeRateInfo from './components/ExchangeRateInfo';
+import SwapPocketsButton from './components/SwapPocketsButton';
 
 const App = () => {
   const [currencyOrigin, setCurrencyOrigin] = useRecoilState(
@@ -79,14 +26,6 @@ const App = () => {
     amountDestinationState,
   );
 
-  // const setFakePockets = useFakePockets();
-
-  // useEffect(() => {
-  //   setFakePockets();
-  // }, []);
-
-  useRefreshExchangeRate(currencyOrigin);
-
   return (
     <div>
       <h1>Exchange App</h1>
@@ -97,6 +36,11 @@ const App = () => {
         />
 
         <AmountInput amount={amountOrigin} onChange={setAmountOrigin} />
+      </div>
+
+      <div>
+        <SwapPocketsButton />
+        <ExchangeRateInfo />
       </div>
 
       <div>
