@@ -1,6 +1,6 @@
 import React from 'react';
 import { useRecoilCallback } from 'recoil';
-import { swapPocketsCallback } from '../recoil/callbacks';
+import { swapPocketsCallback } from '../recoil/pocket';
 
 const SwapPocketsButton = () => {
   const swapPockets = useRecoilCallback(swapPocketsCallback);

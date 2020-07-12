@@ -1,35 +1,23 @@
-import { atomFamily, selector } from 'recoil';
-import { currencyOriginState, currencyDestinationState } from '../recoilState';
-
-const ALL_CURRENCIES: CurrencyDetails[] = [
-  {
-    currency: 'USD',
-    name: 'US-Dollar',
-  },
-  {
-    currency: 'EUR',
-    name: 'Euro',
-  },
-  {
-    currency: 'GBP',
-    name: 'Pound',
-  },
-];
+import { atomFamily, selector, CallbackInterface } from 'recoil';
+import { currencyOriginState, currencyDestinationState } from './currency';
+import { ALL_CURRENCIES } from '../utils/constant';
 
 export const pocketState = atomFamily<number, Currency>({
   key: 'pocketState',
   default: 0,
 });
 
+// selector
 export const pocketListState = selector({
   key: 'pocketListState',
   get: ({ get }) => {
-    return ALL_CURRENCIES.map((curr) => {
-      const amount = get(pocketState(curr.currency));
+    return Object.entries(ALL_CURRENCIES).map(([currency, name]) => {
+      const amount = get(pocketState(currency as Currency));
 
       return {
-        ...curr,
-        amount: amount || 0,
+        currency,
+        name,
+        amount,
       };
     });
   },
@@ -48,3 +36,15 @@ export const pocketDestinationState = selector<number>({
   set: ({ set, get }, newValue) =>
     set(pocketState(get(currencyDestinationState)), newValue),
 });
+
+// callbacks
+export const swapPocketsCallback = ({
+  set,
+  snapshot,
+}: CallbackInterface) => async () => {
+  const currencyDestination = await snapshot.getPromise(
+    currencyDestinationState,
+  );
+
+  set(currencyOriginState, currencyDestination);
+};

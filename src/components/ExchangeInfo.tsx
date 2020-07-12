@@ -1,12 +1,15 @@
 import React from 'react';
 import { useRecoilValue, useRecoilCallback } from 'recoil';
-import { currencyOriginState, currencyDestinationState } from '../recoilState';
-import { refreshExchangeRatesCallback } from '../recoil/callbacks';
+import {
+  currencyOriginState,
+  currencyDestinationState,
+} from '../recoil/currency';
 import { useInterval } from '../utils/hooks';
 import { POLLING_TIME } from '../utils/constant';
 import {
   currentExchangeRateState,
   lastUpdateCurrentExchangeRateState,
+  refreshExchangeRatesCallback,
 } from '../recoil/exchange';
 
 const ExchangeInfo = () => {

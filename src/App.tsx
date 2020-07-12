@@ -3,9 +3,7 @@ import { useRecoilState } from 'recoil';
 import {
   currencyOriginState,
   currencyDestinationState,
-  amountOriginState,
-  amountDestinationState,
-} from './recoilState';
+} from './recoil/currency';
 
 import CurrencySelector from './components/CurrencySelector';
 import ExchangeButton from './components/ExchangeButton';
@@ -13,6 +11,7 @@ import AmountInput from './components/AmountInput';
 import ExchangeInfo from './components/ExchangeInfo';
 import SwapPocketsButton from './components/SwapPocketsButton';
 import LastUpdateExchangeRate from './components/LastUpdateExchangeRate';
+import { amountOriginState, amountDestinationState } from './recoil/amount';
 
 const App = () => {
   const [currencyOrigin, setCurrencyOrigin] = useRecoilState(

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRecoilValue, useRecoilCallback } from 'recoil';
-import { exchangeAmountCallback } from '../recoil/callbacks';
 import { exchangeEnabledState } from '../recoil/exchange';
+import { exchangeAmountCallback } from '../recoil/amount';
 
 const ExchangeButton = () => {
   const enabled = useRecoilValue(exchangeEnabledState);

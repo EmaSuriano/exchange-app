@@ -1,10 +1,7 @@
-import { atomFamily, selector } from 'recoil';
-import {
-  amountOriginState,
-  currencyOriginState,
-  currencyDestinationState,
-} from '../recoilState';
+import { atomFamily, selector, CallbackInterface } from 'recoil';
+import { currencyOriginState, currencyDestinationState } from './currency';
 import { pocketOriginState } from './pocket';
+import { amountOriginState } from './amount';
 
 const DEFAULT_EXCHANGE_RATE = {
   exchange: {
@@ -20,6 +17,7 @@ export const exchangeRateState = atomFamily<ExchangeRate, Currency>({
   default: DEFAULT_EXCHANGE_RATE,
 });
 
+// selector
 export const exchangeEnabledState = selector({
   key: 'exchangeEnabledState',
   get: ({ get }) => {
@@ -50,3 +48,21 @@ export const lastUpdateCurrentExchangeRateState = selector({
     return get(exchangeRateState(currencyOrigin)).lastUpdate;
   },
 });
+
+// callbacks
+export const refreshExchangeRatesCallback = ({
+  set,
+  snapshot,
+}: CallbackInterface) => async () => {
+  const currency = await snapshot.getPromise(currencyOriginState);
+  try {
+    const response = await fetch(
+      `https://api.exchangeratesapi.io/latest?base=${currency}`,
+    );
+    const { rates, date } = (await response.json()) as ExchangeResponse;
+
+    set(exchangeRateState(currency), { exchange: rates, lastUpdate: date });
+  } catch (err) {
+    console.error('There was an error while trying to get exchange Rates ...');
+  }
+};
