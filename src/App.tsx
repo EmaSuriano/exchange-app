@@ -1,5 +1,5 @@
-import React from 'react';
-import { useRecoilState } from 'recoil';
+import React, { useCallback } from 'react';
+import { useRecoilState, useRecoilCallback } from 'recoil';
 import {
   currencyOriginState,
   currencyDestinationState,
@@ -11,7 +11,11 @@ import AmountInput from './components/AmountInput';
 import ExchangeInfo from './components/ExchangeInfo';
 import SwapPocketsButton from './components/SwapPocketsButton';
 import LastUpdateExchangeRate from './components/LastUpdateExchangeRate';
-import { amountOriginState, amountDestinationState } from './recoil/amount';
+import {
+  amountOriginState,
+  amountDestinationState,
+  exchangeAmountCallback,
+} from './recoil/amount';
 
 const App = () => {
   const [currencyOrigin, setCurrencyOrigin] = useRecoilState(
@@ -27,8 +31,19 @@ const App = () => {
     amountDestinationState,
   );
 
+  const exchangeCurrency = useRecoilCallback(exchangeAmountCallback);
+
+  const onSubmit = useCallback(
+    (e) => {
+      console.log('called!');
+      exchangeCurrency();
+      e.preventDefault();
+    },
+    [exchangeCurrency],
+  );
+
   return (
-    <div>
+    <form onSubmit={onSubmit}>
       <h1>Exchange App</h1>
       <div style={{ display: 'flex' }}>
         <CurrencySelector
@@ -58,7 +73,7 @@ const App = () => {
 
       <ExchangeButton />
       <LastUpdateExchangeRate />
-    </div>
+    </form>
   );
 };
 

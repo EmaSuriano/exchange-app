@@ -1,9 +1,10 @@
 import { MutableSnapshot } from 'recoil';
 import { pocketState } from './pocket';
+import { restorePocketAmount } from '../utils/local-storage';
 
 // initializers
 export const initializeState = ({ set }: MutableSnapshot) => {
-  set(pocketState('EUR'), 100);
-  set(pocketState('USD'), 50);
-  set(pocketState('GBP'), 0);
+  set(pocketState('EUR'), restorePocketAmount('EUR'));
+  set(pocketState('USD'), restorePocketAmount('USD'));
+  set(pocketState('GBP'), restorePocketAmount('GBP'));
 };
