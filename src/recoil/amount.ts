@@ -32,6 +32,26 @@ const amountStateCreator = (origin: boolean) => {
 export const amountOriginState = amountStateCreator(true);
 export const amountDestinationState = amountStateCreator(false);
 
+export const calculatePocketAmountOriginState = selector({
+  key: 'calculatePocketAmountOriginState',
+  get: ({ get }) => {
+    const pocketOrigin = get(pocketOriginState);
+    const amountOrigin = get(amountOriginState);
+
+    return pocketOrigin - amountOrigin;
+  },
+});
+
+export const calculatePocketAmountDestinationState = selector({
+  key: 'calculatePocketAmountDestinationState',
+  get: ({ get }) => {
+    const pocketDestination = get(pocketDestinationState);
+    const amountDestination = get(amountDestinationState);
+
+    return pocketDestination + amountDestination;
+  },
+});
+
 // callbacks
 export const exchangeAmountCallback = ({
   set,
@@ -43,21 +63,19 @@ export const exchangeAmountCallback = ({
     currencyDestinationState,
   );
 
-  const pocketOrigin = await snapshot.getPromise(pocketOriginState);
-  const pocketDestination = await snapshot.getPromise(pocketDestinationState);
+  const pocketAmountOrigin = await snapshot.getPromise(
+    calculatePocketAmountOriginState,
+  );
+  const pocketAmountDestination = await snapshot.getPromise(
+    calculatePocketAmountDestinationState,
+  );
 
-  const amountOrigin = await snapshot.getPromise(amountOriginState);
-  const amountDestination = await snapshot.getPromise(amountDestinationState);
-
-  const originAmount = pocketOrigin - amountOrigin;
-  const destinationAmount = pocketDestination + amountDestination;
-
-  set(pocketOriginState, originAmount);
-  set(pocketDestinationState, destinationAmount);
-
-  storePocketAmount(currencyOrigin, originAmount);
-  storePocketAmount(currencyDestination, destinationAmount);
+  set(pocketOriginState, pocketAmountOrigin);
+  set(pocketDestinationState, pocketAmountDestination);
 
   reset(amountOriginState);
   reset(amountDestinationState);
+
+  storePocketAmount(currencyOrigin, pocketAmountOrigin);
+  storePocketAmount(currencyDestination, pocketAmountDestination);
 };

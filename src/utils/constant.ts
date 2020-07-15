@@ -8,3 +8,13 @@ export const ALL_CURRENCIES: Record<Currency, string> = {
   EUR: 'Euro',
   GBP: 'Pound',
 };
+
+export const DECIMAL_SEPARATOR = '.';
+
+export const THOUSAND_SEPARATOR = ',';
+
+export const CURRENCY_TO_TEXT: Record<Currency, string> = {
+  USD: '$',
+  EUR: '€',
+  GBP: '₤',
+};

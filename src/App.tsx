@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useRecoilState, useRecoilCallback } from 'recoil';
 import {
   currencyOriginState,
@@ -16,8 +16,21 @@ import {
   amountDestinationState,
   exchangeAmountCallback,
 } from './recoil/amount';
+import {
+  Box,
+  Form,
+  Header,
+  Text,
+  Heading,
+  Button,
+  Footer,
+  Anchor,
+} from 'grommet';
+import { swapPocketsCallback } from './recoil/pocket';
+import ConfirmationModal from './components/ConfirmationModal';
 
 const App = () => {
+  const [modalVisible, setModalVisible] = useState(true);
   const [currencyOrigin, setCurrencyOrigin] = useRecoilState(
     currencyOriginState,
   );
@@ -32,48 +45,64 @@ const App = () => {
   );
 
   const exchangeCurrency = useRecoilCallback(exchangeAmountCallback);
-
-  const onSubmit = useCallback(
-    (e) => {
-      console.log('called!');
-      exchangeCurrency();
-      e.preventDefault();
-    },
-    [exchangeCurrency],
-  );
+  const swapPockets = useRecoilCallback(swapPocketsCallback);
 
   return (
-    <form onSubmit={onSubmit}>
-      <h1>Exchange App</h1>
-      <div style={{ display: 'flex' }}>
-        <CurrencySelector
-          currency={currencyOrigin}
-          onChange={setCurrencyOrigin}
+    <Box fill align="center" justify="center">
+      <Header>
+        <Heading>Exchange App</Heading>
+      </Header>
+
+      <Form onSubmit={() => setModalVisible(true)}>
+        <div style={{ display: 'flex' }}>
+          <CurrencySelector
+            currency={currencyOrigin}
+            onChange={setCurrencyOrigin}
+          />
+
+          <AmountInput
+            amount={amountOrigin}
+            onChange={setAmountOrigin}
+            currency={currencyOrigin}
+          />
+        </div>
+
+        <div>
+          <Button onClick={swapPockets} primary label="Swap Pockets" />
+          <ExchangeInfo />
+        </div>
+
+        <div>
+          <CurrencySelector
+            currency={currencyDestination}
+            onChange={setCurrencyDestination}
+          />
+
+          <AmountInput
+            amount={amountDestination}
+            onChange={setAmountDestination}
+            currency={currencyDestination}
+          />
+        </div>
+
+        <ExchangeButton />
+      </Form>
+
+      {modalVisible && (
+        <ConfirmationModal
+          onClose={() => setModalVisible(false)}
+          onConfirm={exchangeCurrency}
         />
+      )}
 
-        <AmountInput amount={amountOrigin} onChange={setAmountOrigin} />
-      </div>
-
-      <div>
-        <SwapPocketsButton />
-        <ExchangeInfo />
-      </div>
-
-      <div>
-        <CurrencySelector
-          currency={currencyDestination}
-          onChange={setCurrencyDestination}
-        />
-
-        <AmountInput
-          amount={amountDestination}
-          onChange={setAmountDestination}
-        />
-      </div>
-
-      <ExchangeButton />
-      <LastUpdateExchangeRate />
-    </form>
+      <Footer>
+        <LastUpdateExchangeRate />
+        <Text>
+          Made by{' '}
+          <Anchor href="https://github.com/EmaSuriano">EmaSuriano</Anchor>
+        </Text>
+      </Footer>
+    </Box>
   );
 };
 
