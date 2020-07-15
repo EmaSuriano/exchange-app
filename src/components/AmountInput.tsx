@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
 import { noop } from '../utils/functions';
 import { FormField, MaskedInput, Text } from 'grommet';
-import { DECIMAL_SEPARATOR, CURRENCY_TO_TEXT } from '../utils/constant';
+import {
+  DECIMAL_SEPARATOR,
+  CURRENCY_TO_TEXT,
+  MAX_AMOUNT_EXCHANGE,
+} from '../utils/constant';
 
 type Props = {
   onChange?: (amount: number) => void;
   amount: number;
+  label: string;
   currency: Currency;
 };
 
-const AmountInput = ({ onChange = noop, amount, currency }: Props) => {
+const AmountInput = ({ onChange = noop, amount, currency, label }: Props) => {
   const [decimalSeparator, setDecimalSeparator] = useState(false);
 
   const onInputChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
@@ -17,14 +22,17 @@ const AmountInput = ({ onChange = noop, amount, currency }: Props) => {
 
     setDecimalSeparator(value.endsWith(DECIMAL_SEPARATOR));
     const newAmount = parseFloat(value) || 0;
-    if (newAmount !== amount) onChange(newAmount);
+
+    if (newAmount !== amount && newAmount < MAX_AMOUNT_EXCHANGE)
+      return onChange(newAmount);
   };
 
   const value = `${amount}${decimalSeparator ? DECIMAL_SEPARATOR : ''}`;
 
   return (
-    <FormField label="From">
+    <FormField label={label}>
       <MaskedInput
+        size="xxlarge"
         value={value}
         icon={<Text>{CURRENCY_TO_TEXT[currency]}</Text>}
         mask={[

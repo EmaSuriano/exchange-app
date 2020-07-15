@@ -1,34 +1,22 @@
 import React from 'react';
 import { noop } from '../utils/functions';
-import { useRecoilValue } from 'recoil';
-import { pocketListState, pocketState } from '../recoil/pocket';
+import { Select } from 'grommet';
 
 type Props = {
   onChange?: (curr: Currency) => void;
   currency: Currency;
+  options: { label: string; value: Currency }[];
 };
 
-const CurrencySelector = ({ onChange = noop, currency }: Props) => {
-  const pocketList = useRecoilValue(pocketListState);
-  const pocketAmount = useRecoilValue(pocketState(currency));
-
+const CurrencySelector = ({ onChange = noop, options, currency }: Props) => {
   return (
-    <div>
-      <select
-        value={currency}
-        onChange={(evt) => onChange(evt.currentTarget.value as Currency)}
-      >
-        {pocketList.map((curr) => {
-          const showAmount = currency !== curr.currency;
-          return (
-            <option value={curr.currency} key={curr.currency}>
-              {curr.name} {showAmount && `- ${curr.amount}`}
-            </option>
-          );
-        })}
-      </select>
-      {pocketAmount}
-    </div>
+    <Select
+      value={currency}
+      options={options}
+      labelKey="label"
+      valueKey={{ key: 'value', reduce: true }}
+      onChange={({ value }) => onChange(value as Currency)}
+    />
   );
 };
 

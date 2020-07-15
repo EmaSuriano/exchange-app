@@ -1,5 +1,6 @@
 import { atomFamily, selector, CallbackInterface } from 'recoil';
 import { currencyOriginState, currencyDestinationState } from './currency';
+import { EXCHANGE_INFORMATION } from '../utils/constant';
 import { pocketOriginState } from './pocket';
 import { amountOriginState } from './amount';
 
@@ -20,12 +21,25 @@ export const exchangeRateState = atomFamily<ExchangeRate, Currency>({
 // selector
 export const exchangeEnabledState = selector({
   key: 'exchangeEnabledState',
+  get: ({ get }) =>
+    get(exchangeInformationState) === EXCHANGE_INFORMATION.POSSIBLE,
+});
+
+export const exchangeInformationState = selector({
+  key: 'exchangeInformationState',
   get: ({ get }) => {
     const amountOrigin = get(amountOriginState);
     const pocketOrigin = get(pocketOriginState);
     const lastUpdate = get(lastUpdateCurrentExchangeRateState);
 
-    return amountOrigin > 0 && pocketOrigin > amountOrigin && !!lastUpdate;
+    if (amountOrigin === 0) return EXCHANGE_INFORMATION.AMOUNT_NOT_SPECIFY;
+
+    if (pocketOrigin < amountOrigin)
+      return EXCHANGE_INFORMATION.INSUFFICIENT_AMOUNT;
+
+    if (!lastUpdate) return EXCHANGE_INFORMATION.EXCHANGE_RATE_NOT_FOUND;
+
+    return EXCHANGE_INFORMATION.POSSIBLE;
   },
 });
 

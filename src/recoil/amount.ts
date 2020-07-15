@@ -3,7 +3,10 @@ import { ORIGIN_INDEX, DESTINATION_INDEX } from '../utils/constant';
 import { currentExchangeRateState } from './exchange';
 import { pocketOriginState, pocketDestinationState } from './pocket';
 import { storePocketAmount } from '../utils/local-storage';
-import { currencyOriginState, currencyDestinationState } from './currency';
+import {
+  calculatePocketOriginState,
+  calculatePocketDestinationState,
+} from './shared-selector';
 
 export const amountState = atom<number[]>({
   key: 'amountState',
@@ -32,50 +35,28 @@ const amountStateCreator = (origin: boolean) => {
 export const amountOriginState = amountStateCreator(true);
 export const amountDestinationState = amountStateCreator(false);
 
-export const calculatePocketAmountOriginState = selector({
-  key: 'calculatePocketAmountOriginState',
-  get: ({ get }) => {
-    const pocketOrigin = get(pocketOriginState);
-    const amountOrigin = get(amountOriginState);
-
-    return pocketOrigin - amountOrigin;
-  },
-});
-
-export const calculatePocketAmountDestinationState = selector({
-  key: 'calculatePocketAmountDestinationState',
-  get: ({ get }) => {
-    const pocketDestination = get(pocketDestinationState);
-    const amountDestination = get(amountDestinationState);
-
-    return pocketDestination + amountDestination;
-  },
-});
-
 // callbacks
 export const exchangeAmountCallback = ({
   set,
   snapshot,
   reset,
 }: CallbackInterface) => async () => {
-  const currencyOrigin = await snapshot.getPromise(currencyOriginState);
-  const currencyDestination = await snapshot.getPromise(
-    currencyDestinationState,
-  );
-
   const pocketAmountOrigin = await snapshot.getPromise(
-    calculatePocketAmountOriginState,
+    calculatePocketOriginState,
   );
   const pocketAmountDestination = await snapshot.getPromise(
-    calculatePocketAmountDestinationState,
+    calculatePocketDestinationState,
   );
 
-  set(pocketOriginState, pocketAmountOrigin);
-  set(pocketDestinationState, pocketAmountDestination);
+  set(pocketOriginState, pocketAmountOrigin.amount);
+  set(pocketDestinationState, pocketAmountDestination.amount);
 
   reset(amountOriginState);
   reset(amountDestinationState);
 
-  storePocketAmount(currencyOrigin, pocketAmountOrigin);
-  storePocketAmount(currencyDestination, pocketAmountDestination);
+  storePocketAmount(pocketAmountOrigin.currency, pocketAmountOrigin.amount);
+  storePocketAmount(
+    pocketAmountDestination.currency,
+    pocketAmountDestination.amount,
+  );
 };

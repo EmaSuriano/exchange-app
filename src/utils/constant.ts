@@ -18,3 +18,15 @@ export const CURRENCY_TO_TEXT: Record<Currency, string> = {
   EUR: '€',
   GBP: '₤',
 };
+
+export const EXCHANGE_INFORMATION = {
+  POSSIBLE: 'Transaction possible!',
+  AMOUNT_NOT_SPECIFY: 'Specify amount to exchange ...',
+  INSUFFICIENT_AMOUNT: 'Not enough amount in your current Pocket ...',
+  EXCHANGE_RATE_NOT_FOUND: 'Exchange Rates not loaded yet ...',
+};
+
+export const MAX_AMOUNT_EXCHANGE = 9999999999;
+
+export const DECIMAL_AMOUNT_SUMMARY = 2;
+export const DECIMAL_AMOUNT_EXCHANGE = 10;

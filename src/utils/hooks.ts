@@ -1,4 +1,5 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useContext } from 'react';
+import { ResponsiveContext } from 'grommet';
 
 export const useInterval = (callback: () => any, delay: number) => {
   const savedCallback = useRef<() => any>();
@@ -14,4 +15,10 @@ export const useInterval = (callback: () => any, delay: number) => {
     const id = setInterval(tick, delay);
     return () => clearInterval(id);
   }, [delay]);
+};
+
+export const useMobileViewport = () => {
+  const size = useContext(ResponsiveContext);
+
+  return size === 'small';
 };

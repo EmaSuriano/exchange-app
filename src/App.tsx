@@ -1,91 +1,43 @@
-import React, { useCallback, useState } from 'react';
-import { useRecoilState, useRecoilCallback } from 'recoil';
-import {
-  currencyOriginState,
-  currencyDestinationState,
-} from './recoil/currency';
-
-import CurrencySelector from './components/CurrencySelector';
+import React, { useState } from 'react';
+import { useRecoilCallback } from 'recoil';
 import ExchangeButton from './components/ExchangeButton';
-import AmountInput from './components/AmountInput';
 import ExchangeInfo from './components/ExchangeInfo';
-import SwapPocketsButton from './components/SwapPocketsButton';
-import LastUpdateExchangeRate from './components/LastUpdateExchangeRate';
-import {
-  amountOriginState,
-  amountDestinationState,
-  exchangeAmountCallback,
-} from './recoil/amount';
-import {
-  Box,
-  Form,
-  Header,
-  Text,
-  Heading,
-  Button,
-  Footer,
-  Anchor,
-} from 'grommet';
-import { swapPocketsCallback } from './recoil/pocket';
+import { exchangeAmountCallback } from './recoil/amount';
+import { Form, Header, Heading, Main, Box } from 'grommet';
 import ConfirmationModal from './components/ConfirmationModal';
+import Footer from './components/Footer';
+import SwapPocketsButton from './components/SwapPocketsButton';
+import ExchangePanel from './components/ExchangePanel';
+import { useMobileViewport } from './utils/hooks';
 
 const App = () => {
-  const [modalVisible, setModalVisible] = useState(true);
-  const [currencyOrigin, setCurrencyOrigin] = useRecoilState(
-    currencyOriginState,
-  );
-
-  const [currencyDestination, setCurrencyDestination] = useRecoilState(
-    currencyDestinationState,
-  );
-
-  const [amountOrigin, setAmountOrigin] = useRecoilState(amountOriginState);
-  const [amountDestination, setAmountDestination] = useRecoilState(
-    amountDestinationState,
-  );
-
+  const [modalVisible, setModalVisible] = useState(false);
   const exchangeCurrency = useRecoilCallback(exchangeAmountCallback);
-  const swapPockets = useRecoilCallback(swapPocketsCallback);
+  const mobile = useMobileViewport();
 
   return (
-    <Box fill align="center" justify="center">
+    <Main fill align="center" justify="center" pad={{ horizontal: 'medium' }}>
       <Header>
         <Heading>Exchange App</Heading>
       </Header>
 
       <Form onSubmit={() => setModalVisible(true)}>
-        <div style={{ display: 'flex' }}>
-          <CurrencySelector
-            currency={currencyOrigin}
-            onChange={setCurrencyOrigin}
-          />
+        <Box
+          direction={mobile ? 'column' : 'row'}
+          align="center"
+          justify="center"
+          pad="medium"
+          gap="medium"
+        >
+          <ExchangePanel origin={true} />
+          <SwapPocketsButton />
+          <ExchangePanel origin={false} />
+        </Box>
 
-          <AmountInput
-            amount={amountOrigin}
-            onChange={setAmountOrigin}
-            currency={currencyOrigin}
-          />
-        </div>
-
-        <div>
-          <Button onClick={swapPockets} primary label="Swap Pockets" />
+        <Box align="center" justify="center" pad="medium" direction="row">
+          <ExchangeButton />
           <ExchangeInfo />
-        </div>
-
-        <div>
-          <CurrencySelector
-            currency={currencyDestination}
-            onChange={setCurrencyDestination}
-          />
-
-          <AmountInput
-            amount={amountDestination}
-            onChange={setAmountDestination}
-            currency={currencyDestination}
-          />
-        </div>
-
-        <ExchangeButton />
+        </Box>
       </Form>
 
       {modalVisible && (
@@ -95,14 +47,8 @@ const App = () => {
         />
       )}
 
-      <Footer>
-        <LastUpdateExchangeRate />
-        <Text>
-          Made by{' '}
-          <Anchor href="https://github.com/EmaSuriano">EmaSuriano</Anchor>
-        </Text>
-      </Footer>
-    </Box>
+      <Footer />
+    </Main>
   );
 };
 

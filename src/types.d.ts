@@ -5,6 +5,8 @@ type Pocket = {
   amount: number;
 };
 
+type ExchangeTransaction = Pocket;
+
 type ExchangeRate = {
   exchange: Record<Currency, number>;
   lastUpdate: Date | null;

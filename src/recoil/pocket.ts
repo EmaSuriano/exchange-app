@@ -11,8 +11,9 @@ export const pocketState = atomFamily<number, Currency>({
 export const pocketListState = selector({
   key: 'pocketListState',
   get: ({ get }) => {
-    return Object.entries(ALL_CURRENCIES).map(([currency, name]) => {
-      const amount = get(pocketState(currency as Currency));
+    return Object.entries(ALL_CURRENCIES).map(([curr, name]) => {
+      const currency = curr as Currency;
+      const amount = get(pocketState(currency));
 
       return {
         currency,
