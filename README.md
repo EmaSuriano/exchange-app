@@ -2,11 +2,35 @@
 
 [![Build Status](https://travis-ci.com/EmaSuriano/exchange-app.svg?branch=master)](https://travis-ci.com/EmaSuriano/exchange-app)
 
-> Exchange Application based on [Open Exchange Rate](https://openexchangerates.org/)
+> Open Source Exchange Application based on [Open Exchange Rate](https://openexchangerates.org/)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## [Live Demo ✨](https://emasuriano.github.io/exchange-app/)
+
+## Features 🚀
+
+- Conversion between 3 different currencies: USD, EUR and GBP
+- Exchange Rate based on [Open Exchange Rate](https://openexchangerates.org/)
+- Save Pocket amount between session by using Local Storage API.
+- Responsive and Simple Design
+
+## Lighthouse Score 💯
+
+![Lighthouse Score](images/2020-07-16-13-59-25.png)
+
+## Stack 🔌
+
+- [Recoil](https://recoiljs.org/): State Management
+- [Grommet](https://v2.grommet.io/): Design System powered by styled-components
+- [Typescript](https://www.typescriptlang.org/): Project compiler
+- [Jest](https://jestjs.io/): Test runner
+- [react-testing-library](https://testing-library.com/docs/react-testing-library/intro): Testing library
+- [Es-lint](https://eslint.org/): Project linter
+- [Prettier](https://prettier.io/): Code formatter
+- [Travis CI](https://travis-ci.com/): CI setup
+
+## Available Scripts 📝
 
 In the project directory, you can run:
 
@@ -33,18 +57,31 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `yarn eject`
+### `yarn lint`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Run `eslint` with `react-app` configuration
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Design 🎨
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Thanks to Grommet responsiveness, the application is able to adapt very well to several screen sizes.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+| Desktop                                          | Tablet                                          | Mobile                                          |
+| ------------------------------------------------ | ----------------------------------------------- | ----------------------------------------------- |
+| ![Home Desktop](images/2020-07-16-13-45-11.png)  | ![Home Tablet](images/2020-07-16-13-45-29.png)  | ![Home Mobile](images/2020-07-16-13-45-54.png)  |
+| ![Modal Desktop](images/2020-07-16-13-46-18.png) | ![Modal Tablet](images/2020-07-16-13-46-33.png) | ![Modal Mobile](images/2020-07-16-13-49-00.png) |
 
-## Learn More
+## CI Configuration 🤖
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Travis will execute the following commands in all the branches of the project:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- yarn lint
+- yarn test
+- yarn build
+
+Every time a commit is pushed to `master` it will deploy the website to Github Pages.
+
+For more information about the Travis CI configuration, refer to [.travis.yml](./.travis.yml).
+
+## License
+
+MIT.

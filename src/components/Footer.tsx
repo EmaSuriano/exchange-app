@@ -36,7 +36,7 @@ const Footer = () => {
 
         <Text textAlign="center">
           Made by{' '}
-          <Anchor href="https://github.com/EmaSuriano">EmaSuriano</Anchor>
+          <Anchor href="https://github.com/EmaSuriano">Ema Suriano</Anchor>
         </Text>
       </Box>
 

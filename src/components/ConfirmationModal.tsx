@@ -33,10 +33,11 @@ const ConfirmationModal = ({ onClose, onConfirm }: Props) => {
       onEsc={onClose}
       animation="slide"
       responsive={false}
+      margin="small"
       modal
     >
       <ModalHeader onClose={onClose} title="Confirm Transaction" />
-      <Box gap="medium" margin="medium" width="500px">
+      <Box gap="medium" pad="medium" width="500px">
         <Box>
           <Text>Are you sure you want to exchange the following amount?</Text>
 
