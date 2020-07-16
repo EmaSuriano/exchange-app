@@ -23,7 +23,7 @@ export const calculatePocketOriginState = selector<Pocket>({
   key: 'calculatePocketOriginState',
   get: ({ get }) => ({
     currency: get(currencyOriginState),
-    amount: get(pocketOriginState) + get(amountOriginState),
+    amount: get(pocketOriginState) - get(amountOriginState),
   }),
 });
 
