@@ -22,7 +22,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## Stack 🔌
 
 - [Recoil](https://recoiljs.org/): State Management
-- [Grommet](https://v2.grommet.io/): Design System powered by styled-components
+- [Grommet](https://v2.grommet.io/): Design System powered by [styled-components](https://styled-components.com/)
 - [Typescript](https://www.typescriptlang.org/): Project compiler
 - [Jest](https://jestjs.io/): Test runner
 - [react-testing-library](https://testing-library.com/docs/react-testing-library/intro): Testing library
@@ -81,6 +81,35 @@ Travis will execute the following commands in all the branches of the project:
 Every time a commit is pushed to `master` it will deploy the website to Github Pages.
 
 For more information about the Travis CI configuration, refer to [.travis.yml](./.travis.yml).
+
+## Development Warnings ⚠️
+
+When running the project locally, there is a warning that exists on every component using `useRecoilState` or `useRecoilValue`. The error has the following information:
+
+```plain
+1.chunk.js:99662 Warning: Cannot update a component (`Batcher`) while rendering a different component (`ExchangePanel`). To locate the bad setState() call inside `ExchangePanel`, follow the stack trace as described in https://fb.me/setstate-in-render
+    in ExchangePanel (at App.tsx:37)
+    in div (created by StyledBox)
+    in StyledBox (created by Box)
+    in Box (at App.tsx:31)
+    in div (created by StyledBox)
+    in StyledBox (created by Box)
+    in Box (at App.tsx:30)
+    in form (created by Form)
+    in Form (at App.tsx:29)
+    in main (created by StyledBox)
+    in StyledBox (created by Box)
+    in Box (created by Main)
+    in Main (at App.tsx:18)
+    in App (at src/index.tsx:13)
+    in div (created by StyledGrommet)
+    in StyledGrommet (created by Grommet)
+    in Grommet (at src/index.tsx:12)
+    in RecoilRoot (at src/index.tsx:11)
+    in StrictMode (at src/index.tsx:10)
+```
+
+This issue has already been reported and the recoil team is working on it. To know more about this issue, please follow [this thread](https://github.com/facebookexperimental/Recoil/issues/12).
 
 ## License
 

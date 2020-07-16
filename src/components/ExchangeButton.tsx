@@ -8,6 +8,7 @@ import { useMobileViewport } from '../utils/hooks';
 const ExchangeButton = () => {
   const disabled = !useRecoilValue(exchangeEnabledState);
   const mobile = useMobileViewport();
+
   return (
     <Button
       size="large"
