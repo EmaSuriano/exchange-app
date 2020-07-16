@@ -29,9 +29,11 @@ const AmountInput = ({ onChange = noop, amount, currency, label }: Props) => {
     onChange(newAmount);
   };
 
-  const value = decimalSeparator
-    ? `${amount}${DECIMAL_SEPARATOR}`
-    : formatAmount(amount);
+  const containSeparator = amount % 1 !== 0;
+  const value =
+    !containSeparator && decimalSeparator
+      ? `${amount}${DECIMAL_SEPARATOR}`
+      : formatAmount(amount);
 
   return (
     <FormField label={label}>
