@@ -3,12 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "homepage": "https://emasuriano.github.io/exchange-app/",
+  "repository": "https://github.com/EmaSuriano/exchange-app",
   "dependencies": {
     "@types/testing-library__dom": "^7.5.0",
     "grommet": "^2.14.0",
     "polished": "^3.6.5",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-github-corner": "^2.3.0",
     "react-scripts": "3.4.1",
     "recoil": "^0.0.10",
     "styled-components": "^5.1.1"
