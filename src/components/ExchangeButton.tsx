@@ -14,7 +14,7 @@ const ExchangeButton = () => {
       size="large"
       gap="medium"
       type="submit"
-      a11yTitle="Exchange amount"
+      a11yTitle="Exchange Amount"
       disabled={disabled}
       label="Exchange"
       icon={<Update />}

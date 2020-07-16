@@ -35,7 +35,13 @@ const ExchangeInfo = () => {
   })}`;
 
   return (
-    <Button onClick={swapPockets} color="accent-1" label={label} primary />
+    <Button
+      a11yTitle="Exchange Rate"
+      onClick={swapPockets}
+      color="accent-1"
+      label={label}
+      primary
+    />
   );
 };
 

@@ -36,7 +36,7 @@ const ConfirmationModal = ({ onClose, onConfirm }: Props) => {
       margin="small"
       modal
     >
-      <ModalHeader onClose={onClose} title="Confirm Transaction" />
+      <ModalHeader onClose={onClose} title="Transaction Summary" />
       <Box gap="medium" pad="medium" width="500px">
         <Box>
           <Text>Are you sure you want to exchange the following amount?</Text>
@@ -57,8 +57,18 @@ const ConfirmationModal = ({ onClose, onConfirm }: Props) => {
         </Box>
 
         <Box direction="row" gap="medium" justify="center">
-          <Button secondary label="Cancel" onClick={onClose} />
-          <Button primary label="Confirm" onClick={onAccept} />
+          <Button
+            secondary
+            a11yTitle="Cancel Exchange"
+            label="Cancel"
+            onClick={onClose}
+          />
+          <Button
+            primary
+            a11yTitle="Confirm Exchange"
+            label="Confirm"
+            onClick={onAccept}
+          />
         </Box>
       </Box>
     </Layer>

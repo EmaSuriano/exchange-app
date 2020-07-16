@@ -30,9 +30,10 @@ const ExchangePanel = ({ origin }: Props) => {
   }));
 
   const label = origin ? 'Exchange' : 'Receive';
+  const testId = origin ? 'panel-origin' : 'panel-destination';
 
   return (
-    <Box gap="small">
+    <Box gap="small" data-testid={testId}>
       <CurrencySelector
         currency={currency}
         onChange={setCurrency}
