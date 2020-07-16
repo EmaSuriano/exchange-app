@@ -24,31 +24,41 @@ const ConfirmationModal = ({ onClose, onConfirm }: Props) => {
   const pocketOrigin = useRecoilValue(calculatePocketOriginState);
   const pocketDestination = useRecoilValue(calculatePocketDestinationState);
 
+  const onAccept = compose(onClose, onConfirm);
+
   return (
     <Layer
       position="center"
       onClickOutside={onClose}
       onEsc={onClose}
       animation="slide"
+      responsive={false}
       modal
     >
       <ModalHeader onClose={onClose} title="Confirm Transaction" />
-      <Box margin="medium">
-        <Text>Are you sure you want to exchange the following amount?</Text>
+      <Box gap="medium" margin="medium" width="500px">
+        <Box>
+          <Text>Are you sure you want to exchange the following amount?</Text>
 
-        <ExchangeComparison
-          origin={transactionOrigin}
-          destination={transactionDestination}
-        />
+          <ExchangeComparison
+            origin={transactionOrigin}
+            destination={transactionDestination}
+          />
+        </Box>
 
-        <Text>Status of accounts after exchange:</Text>
+        <Box>
+          <Text>Status of accounts after exchange:</Text>
 
-        <PocketComparison
-          origin={pocketOrigin}
-          destination={pocketDestination}
-        />
+          <Box justify="around" direction="row" margin="medium">
+            <PocketComparison pocket={pocketOrigin} origin={true} />
+            <PocketComparison pocket={pocketDestination} origin={false} />
+          </Box>
+        </Box>
 
-        <ModalFooter onClose={onClose} onConfirm={onConfirm} />
+        <Box direction="row" gap="medium" justify="center">
+          <Button secondary label="Cancel" onClick={onClose} />
+          <Button primary label="Confirm" onClick={onAccept} />
+        </Box>
       </Box>
     </Layer>
   );
@@ -73,16 +83,5 @@ const ModalHeader = ({ onClose, title }: ModalHeaderProps) => (
     <Button icon={<FormClose />} a11yTitle="Close button" onClick={onClose} />
   </Box>
 );
-
-const ModalFooter = ({ onClose, onConfirm }: Props) => {
-  const onAccept = compose(onClose, onConfirm);
-
-  return (
-    <Box direction="row" gap="medium" justify="center">
-      <Button secondary label="Cancel" onClick={onClose} />
-      <Button primary label="Confirm" onClick={onAccept} />
-    </Box>
-  );
-};
 
 export default ConfirmationModal;

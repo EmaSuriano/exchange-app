@@ -6,6 +6,7 @@ import {
   CURRENCY_TO_TEXT,
   MAX_AMOUNT_EXCHANGE,
 } from '../utils/constant';
+import { formatAmount } from '../utils/format';
 
 type Props = {
   onChange?: (amount: number) => void;
@@ -23,34 +24,40 @@ const AmountInput = ({ onChange = noop, amount, currency, label }: Props) => {
     setDecimalSeparator(value.endsWith(DECIMAL_SEPARATOR));
     const newAmount = parseFloat(value) || 0;
 
-    if (newAmount !== amount && newAmount < MAX_AMOUNT_EXCHANGE)
-      return onChange(newAmount);
+    if (newAmount === amount || newAmount > MAX_AMOUNT_EXCHANGE) return;
+
+    onChange(newAmount);
   };
 
-  const value = `${amount}${decimalSeparator ? DECIMAL_SEPARATOR : ''}`;
+  const value = decimalSeparator
+    ? `${amount}${DECIMAL_SEPARATOR}`
+    : formatAmount(amount);
 
   return (
     <FormField label={label}>
       <MaskedInput
+        aria-label="Amount Input"
         size="xxlarge"
         value={value}
-        icon={<Text>{CURRENCY_TO_TEXT[currency]}</Text>}
-        mask={[
-          {
-            regexp: /^[0-9]*$/,
-            placeholder: '0',
-          },
-          { fixed: DECIMAL_SEPARATOR },
-          {
-            length: 2,
-            regexp: /^[0-9]*$/,
-            placeholder: '00',
-          },
-        ]}
+        icon={<Text size="xxlarge">{CURRENCY_TO_TEXT[currency]}</Text>}
+        mask={MASK_INPUT}
         onChange={onInputChange}
       />
     </FormField>
   );
 };
+
+const MASK_INPUT = [
+  {
+    regexp: /^[0-9]*$/,
+    placeholder: '0',
+  },
+  { fixed: DECIMAL_SEPARATOR },
+  {
+    length: 2,
+    regexp: /^[0-9]*$/,
+    placeholder: '00',
+  },
+];
 
 export default AmountInput;

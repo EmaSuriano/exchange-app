@@ -4,20 +4,20 @@ import { Drop, Box } from 'grommet';
 type Props = {
   target: Object;
   children: ReactNode;
+  position: 'right' | 'bottom';
 };
 
-const Tooltip = ({ target, children }: Props) => (
-  <Drop
-    align={{
-      left: 'right',
-    }}
-    target={target}
-    plain
-  >
-    <Box margin="xsmall" pad="small" background="accent-3" round="medium">
-      {children}
-    </Box>
-  </Drop>
-);
+const Tooltip = ({ target, children, position }: Props) => {
+  const top = position === 'bottom' ? 'bottom' : undefined;
+  const left = position === 'right' ? 'right' : undefined;
+
+  return (
+    <Drop align={{ top, left }} target={target} plain>
+      <Box margin="small" pad="small" background="accent-1" round="small">
+        {children}
+      </Box>
+    </Drop>
+  );
+};
 
 export default Tooltip;

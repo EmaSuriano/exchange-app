@@ -17,8 +17,20 @@ export const useInterval = (callback: () => any, delay: number) => {
   }, [delay]);
 };
 
+const RESPONSIVE_VIEWPORT = {
+  desktop: 'large',
+  tablet: 'medium',
+  mobile: 'small',
+};
+
 export const useMobileViewport = () => {
   const size = useContext(ResponsiveContext);
 
-  return size === 'small';
+  return size === RESPONSIVE_VIEWPORT.mobile;
+};
+
+export const useTabletViewport = () => {
+  const size = useContext(ResponsiveContext);
+  const sizes = [RESPONSIVE_VIEWPORT.mobile, RESPONSIVE_VIEWPORT.tablet];
+  return sizes.includes(size);
 };

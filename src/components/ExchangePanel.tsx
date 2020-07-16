@@ -32,7 +32,7 @@ const ExchangePanel = ({ origin }: Props) => {
   const label = origin ? 'Exchange' : 'Receive';
 
   return (
-    <Box>
+    <Box gap="small">
       <CurrencySelector
         currency={currency}
         onChange={setCurrency}

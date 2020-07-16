@@ -10,6 +10,7 @@ const currencyState = atom<Currency[]>({
 const currencyStateCreator = (origin: boolean) => {
   const index = origin ? ORIGIN_INDEX : DESTINATION_INDEX;
   const key = origin ? 'currencyOriginState' : 'currencyDestinationState';
+
   return selector<Currency>({
     key,
     get: ({ get }) => get(currencyState)[index],

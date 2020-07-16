@@ -29,4 +29,6 @@ export const EXCHANGE_INFORMATION = {
 export const MAX_AMOUNT_EXCHANGE = 9999999999;
 
 export const DECIMAL_AMOUNT_SUMMARY = 2;
-export const DECIMAL_AMOUNT_EXCHANGE = 10;
+export const DECIMAL_AMOUNT_EXCHANGE = 4;
+
+export const ANIMATION_DURATION = 500;

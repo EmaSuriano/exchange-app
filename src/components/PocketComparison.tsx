@@ -3,29 +3,18 @@ import { Text, Box } from 'grommet';
 import { formatPocket } from '../utils/format';
 
 type Props = {
-  origin: Pocket;
-  destination: Pocket;
+  pocket: Pocket;
+  origin: boolean;
 };
 
-const PocketComparison = ({ origin, destination }: Props) => (
-  <Box justify="around" direction="row" margin="medium">
-    <Box align="center">
-      <Text size="large" weight="bold">
-        {origin.currency} Pocket
-      </Text>
-      <Text size="large" color="red">
-        {formatPocket(origin)}
-      </Text>
-    </Box>
-
-    <Box align="center">
-      <Text size="large" weight="bold">
-        {destination.currency} Pocket
-      </Text>
-      <Text size="large" color="green">
-        {formatPocket(destination)}
-      </Text>
-    </Box>
+const PocketComparison = ({ pocket, origin }: Props) => (
+  <Box align="center" gap="small">
+    <Text size="large" weight="bold">
+      {pocket.currency} Pocket
+    </Text>
+    <Text size="large" color={origin ? 'status-critical' : 'status-ok'}>
+      {formatPocket(pocket)}
+    </Text>
   </Box>
 );
 

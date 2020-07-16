@@ -11,21 +11,17 @@ import {
   lastUpdateCurrentExchangeRateState,
   refreshExchangeRatesCallback,
 } from '../recoil/exchange';
-import { FormField, Text } from 'grommet';
+import { Button } from 'grommet';
 import { formatExchange } from '../utils/format';
+import { swapPocketsCallback } from '../recoil/pocket';
 
 const ExchangeInfo = () => {
   const exchange = useRecoilValue(currentExchangeRateState);
   const lastUpdate = useRecoilValue(lastUpdateCurrentExchangeRateState);
   const currencyOrigin = useRecoilValue(currencyOriginState);
   const currencyDestination = useRecoilValue(currencyDestinationState);
-
-  const exchangeMap = {
-    amount: exchange,
-    currency: currencyDestination,
-  };
-
   const refreshExchangeRates = useRecoilCallback(refreshExchangeRatesCallback);
+  const swapPockets = useRecoilCallback(swapPocketsCallback);
 
   if (!lastUpdate) refreshExchangeRates();
 
@@ -33,12 +29,13 @@ const ExchangeInfo = () => {
     refreshExchangeRates();
   }, POLLING_TIME);
 
+  const label = `${CURRENCY_TO_TEXT[currencyOrigin]}1 = ${formatExchange({
+    amount: exchange,
+    currency: currencyDestination,
+  })}`;
+
   return (
-    <FormField label="Exchange Rate">
-      <Text margin="small" weight="bold">
-        {CURRENCY_TO_TEXT[currencyOrigin]} 1 = {formatExchange(exchangeMap)}
-      </Text>
-    </FormField>
+    <Button onClick={swapPockets} color="accent-1" label={label} primary />
   );
 };
 

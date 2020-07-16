@@ -6,7 +6,6 @@ import { exchangeAmountCallback } from './recoil/amount';
 import { Form, Header, Heading, Main, Box } from 'grommet';
 import ConfirmationModal from './components/ConfirmationModal';
 import Footer from './components/Footer';
-import SwapPocketsButton from './components/SwapPocketsButton';
 import ExchangePanel from './components/ExchangePanel';
 import { useMobileViewport } from './utils/hooks';
 
@@ -16,27 +15,34 @@ const App = () => {
   const mobile = useMobileViewport();
 
   return (
-    <Main fill align="center" justify="center" pad={{ horizontal: 'medium' }}>
-      <Header>
-        <Heading>Exchange App</Heading>
+    <Main
+      fill
+      align="center"
+      justify="center"
+      pad="medium"
+      background="background-front"
+    >
+      <Header margin="small">
+        <Heading>{`💸 Exchange App 💸`}</Heading>
       </Header>
 
       <Form onSubmit={() => setModalVisible(true)}>
-        <Box
-          direction={mobile ? 'column' : 'row'}
-          align="center"
-          justify="center"
-          pad="medium"
-          gap="medium"
-        >
-          <ExchangePanel origin={true} />
-          <SwapPocketsButton />
-          <ExchangePanel origin={false} />
-        </Box>
-
-        <Box align="center" justify="center" pad="medium" direction="row">
-          <ExchangeButton />
-          <ExchangeInfo />
+        <Box align="center" justify="center" gap="medium" margin="medium">
+          <Box
+            direction={mobile ? 'column' : 'row'}
+            align="center"
+            justify="center"
+            gap="large"
+          >
+            <ExchangePanel origin={true} />
+            <Box gap="medium" style={{ minWidth: mobile ? '100%' : '200px' }}>
+              <ExchangeInfo />
+              {!mobile && <ExchangeButton />}
+            </Box>
+            <ExchangePanel origin={false} />
+          </Box>
+          {mobile && <ExchangeButton />}
+          <Footer />
         </Box>
       </Form>
 
@@ -46,8 +52,6 @@ const App = () => {
           onConfirm={exchangeCurrency}
         />
       )}
-
-      <Footer />
     </Main>
   );
 };

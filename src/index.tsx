@@ -9,7 +9,7 @@ import { grommet } from 'grommet/themes';
 ReactDOM.render(
   <React.StrictMode>
     <RecoilRoot initializeState={initializeState}>
-      <Grommet theme={grommet}>
+      <Grommet theme={grommet} full>
         <App />
       </Grommet>
     </RecoilRoot>

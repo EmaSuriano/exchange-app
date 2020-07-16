@@ -11,6 +11,7 @@ type Props = {
 const CurrencySelector = ({ onChange = noop, options, currency }: Props) => {
   return (
     <Select
+      a11yTitle="Pocket Select"
       value={currency}
       options={options}
       labelKey="label"
