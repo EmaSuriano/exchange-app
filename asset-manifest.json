@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.js": "/exchange-app/static/js/main.f36bb206.chunk.js",
-    "main.js.map": "/exchange-app/static/js/main.f36bb206.chunk.js.map",
+    "main.js": "/exchange-app/static/js/main.f1f9711a.chunk.js",
+    "main.js.map": "/exchange-app/static/js/main.f1f9711a.chunk.js.map",
     "runtime-main.js": "/exchange-app/static/js/runtime-main.35315554.js",
     "runtime-main.js.map": "/exchange-app/static/js/runtime-main.35315554.js.map",
     "static/js/2.1ac8178c.chunk.js": "/exchange-app/static/js/2.1ac8178c.chunk.js",
     "static/js/2.1ac8178c.chunk.js.map": "/exchange-app/static/js/2.1ac8178c.chunk.js.map",
     "index.html": "/exchange-app/index.html",
-    "precache-manifest.cbf9cb0caa40485c13a8b673651e9a06.js": "/exchange-app/precache-manifest.cbf9cb0caa40485c13a8b673651e9a06.js",
+    "precache-manifest.de935b0ee3e834784f7bed00c64431b2.js": "/exchange-app/precache-manifest.de935b0ee3e834784f7bed00c64431b2.js",
     "service-worker.js": "/exchange-app/service-worker.js",
     "static/js/2.1ac8178c.chunk.js.LICENSE.txt": "/exchange-app/static/js/2.1ac8178c.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.35315554.js",
     "static/js/2.1ac8178c.chunk.js",
-    "static/js/main.f36bb206.chunk.js"
+    "static/js/main.f1f9711a.chunk.js"
   ]
 }
